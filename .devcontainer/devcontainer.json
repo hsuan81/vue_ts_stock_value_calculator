@@ -1,18 +1,19 @@
 {
   "name": "stock-value-calculator",
   "build": {
-    "dockerComposeFile": ["docker-compose.yml"],
+    "dockerComposeFile": "docker-compose.yml",
     // Update 'VARIANT' to pick a Node version: 18, 16, 14.
     // Append -bullseye or -buster to pin to an OS version.
     // Use -bullseye variants on local on arm64/Apple Silicon.
     "service": "frontend-web",
     "args": {
-      "VARIANT": "16-bullseye"
-    },
+		"VARIANT": "16-bullseye"
+	},
     "workspaceFolder": "/workspace",
     "settings": {
       "#terminal.integrated.defaultProfile.linux#": "/bin/zsh"
-    }
+	},
+	"dockerfile": "Dockerfile"
   },
 
   // Configure tool-specific properties.
@@ -20,9 +21,13 @@
     // Configure properties specific to VS Code.
     "vscode": {
       // Add the IDs of extensions you want installed when the container is created.
-      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+      "extensions": [
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode"
+	]
     }
-  }
+},
+"remoteUser": "node"
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],

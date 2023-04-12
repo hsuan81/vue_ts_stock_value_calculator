@@ -1,16 +1,28 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <h1>Stock Value Calculator</h1>
+  <button @click="start">Calculate</button>
+  <Results v-if="isCalculating"/>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import Results  from "./components/Results.vue";
+
 
 export default defineComponent({
   name: 'App',
   components: {
-    HelloWorld
+    Results,
+  },
+  data() {
+    return {
+      isCalculating: false,
+    }
+  },
+  methods: {
+    start() {
+      this.isCalculating = true
+    }
   }
 });
 </script>
