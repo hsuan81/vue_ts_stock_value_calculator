@@ -1,6 +1,6 @@
 <template>
   <h1>Stock Value Calculator</h1>
-  <button @click="start">Calculate</button>
+  <button @click="start" :disabled="isCalculating">Calculate</button>
   <Results v-if="isCalculating"/>
 </template>
 
