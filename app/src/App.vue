@@ -1,7 +1,8 @@
 <template>
   <h1>Stock Value Calculator</h1>
+  <input type="text" v-model="ticker" placeholder="stock ticker">
   <button @click="start" :disabled="isCalculating">Calculate</button>
-  <Results v-if="isCalculating"/>
+  <Results v-if="isCalculating" :ticker="ticker"/>
 </template>
 
 <script lang="ts">
@@ -17,6 +18,7 @@ export default defineComponent({
   data() {
     return {
       isCalculating: false,
+      ticker: ""  ,
     }
   },
   methods: {
