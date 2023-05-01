@@ -1,15 +1,26 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-    <div v-if="stockRatios.length > 0">
-        <h1>Results</h1>
+    <div class="result" v-if="stockRatios.length > 0">
+        <h2 v-if="stockMeta.company">{{ stockMeta.company }}</h2>
         <!-- <p>Expensive price</p>
         <p>Intrinsic value ${{ DDMprice }}</p>
         <p>Cheap price</p> -->
         <!-- <p>{{ stockMeta[0]['date'] }}</p> -->
-        <p v-if="stockMeta">Company:  {{ stockMeta}}</p>
-        <p>Data date: {{ stockRatios[0].date }}</p>
-        <p>PE ratio: {{ stockRatios[0]['priceEarningsRatio'].toFixed(2) }}</p>
-        <p v-if="industryPE">Industry PE Ratio: {{ industryPE }}</p>
+        <ul>
+            <!-- <li v-if="stockMeta">Company:  {{ stockMeta.company}}</li> -->
+            <li v-if="stockRatios.length > 0">Data date: {{ stockRatios[0].date }}</li>
+            <li v-if="stockRatios.length > 0">PE ratio: {{ stockRatios[0]['priceEarningsRatio'].toFixed(2) }}</li>
+            <li v-if="prices.length > 0">Latest close price: {{ prices[0]['date'] }} {{ prices[0]['closePrice'] }}</li>
+            <li v-if="prices.length > 0">Previous close price: {{ prices[1]['date'] }} {{ prices[1]['closePrice']  }}</li>
+
+        </ul>
+        <!-- <p v-if="stockMeta">Company:  {{ stockMeta.company}}</p>
+        <p v-if="stockRatios">Data date: {{ stockRatios[0].date }}</p>
+        <p v-if="stockRatios">PE ratio: {{ stockRatios[0]['priceEarningsRatio'].toFixed(2) }}</p>
+        <p v-if="prices">Latest close price: {{ prices[0]['date'] }} {{ prices[0]['closePrice'] }}</p>
+        <p v-if="prices">Previous close price: {{ prices[1]['date'] }} {{ prices[1]['closePrice']  }}</p> -->
+
+
 
     </div>
 </template>
@@ -32,11 +43,10 @@ export interface Meta {
     industry: string,
 }
 
-export interface IndustryPERatio {
+export interface Price {
+    // symbol: string,
     date: string,
-    industry : string,
-    exchange : string,
-    pe : string
+    closePrice: string,
 }
 
 export default defineComponent({
@@ -46,9 +56,9 @@ export default defineComponent({
     data() {
         return {
             stockMeta: {} as Meta,
-            industryPE: {} as IndustryPERatio, 
             stockRatios: [] as Ratios[],
-            peers: [],
+            prices: [] as Price[],
+            priceUrl: "",
             metaUrl: "",
             ratioUrl: "",
             industryPEUrl: "",
@@ -66,7 +76,7 @@ export default defineComponent({
                 this.stockMeta.symbol = response.data[0].symbol
                 this.stockMeta.sector = response.data[0].sector
                 this.stockMeta.industry = response.data[0].industry
-                console.log(this.stockMeta)
+                // console.log(this.stockMeta)
             })
         },
 
@@ -74,14 +84,13 @@ export default defineComponent({
             this.ratioUrl = 'https://financialmodelingprep.com/api/v3/ratios/' + this.ticker + '?limit=1&apikey=64d87be0d4d4f512a1a72a98b3038d1c'
             axios.get(this.ratioUrl).then((response) => {this.stockRatios = response.data})
         },
-        getIndustryPER() {
-            this.industryPEUrl = 'https://financialmodelingprep.com/api/v4/industry_price_earning_ratio?date='+ this.stockRatios[0].date+'&exchange='+ this.stockMeta.exchange +'&apikey=64d87be0d4d4f512a1a72a98b3038d1c'
-            axios.get(this.industryPEUrl).then((response) => {
-                this.industryPE = response.data.filter((e: IndustryPERatio) => { e.industry == this.stockMeta.industry})
-                console.log(this.industryPE)
-            })
 
-        },
+        getStockPrice() {
+            this.priceUrl = 'https://financialmodelingprep.com/api/v3/historical-price-full/' + this.ticker + '?serietype=line&apikey=64d87be0d4d4f512a1a72a98b3038d1c'
+            axios.get(this.priceUrl).then((response) => {this.prices = response.data.historical.slice(0,2).map((e: {date: string, close: number}):Price => {return {date: e.date, closePrice: e.close.toString()}})})
+            // axios.get(this.priceUrl).then((response) => {console.log(response.data.historical.slice(0,2).map((e: {date: string, close: number}):Price => {return {date: e.date, closePrice: e.close.toString()}}))})
+            // console.log(this.prices)
+        }
     },
     mounted() {
         // this.DDMprice = Math.round(this.dividend / (this.roe - this.divdgrowthrate))
@@ -93,6 +102,7 @@ export default defineComponent({
         console.log(this.stockMeta)
         this.getStockMeta()
         this.getStockRatios()
+        this.getStockPrice()
         console.log(this.stockRatios.length)
         console.log(this.stockMeta)
         // console.log(this.stockMeta[0]['date'])
@@ -102,4 +112,32 @@ export default defineComponent({
     },
 )
 </script>
-<style></style>
+<style>
+
+.result {
+    background-color: white;
+    block-size: 200px;
+    display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: stretch;
+	align-content: stretch;
+    margin: 10px;
+    border-radius:20px;
+    text-align: justify;
+    margin-block-start: 20px;
+    width: 60%;
+}
+h2 {
+  color: #4b8f29;
+  font-size: 2em;
+  /* text-decoration: underline solid; */
+}
+
+li {
+    list-style-type: none;
+    font-family:Arial;
+    font-size:1em;
+}
+</style>
