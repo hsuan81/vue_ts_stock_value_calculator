@@ -6,7 +6,7 @@
         <p>Intrinsic value ${{ DDMprice }}</p>
         <p>Cheap price</p> -->
         <!-- <p>{{ stockMeta[0]['date'] }}</p> -->
-        <ul>
+        <ul class="text">
             <!-- <li v-if="stockMeta">Company:  {{ stockMeta.company}}</li> -->
             <li v-if="stockRatios.length > 0">Data date: {{ stockRatios[0].date }}</li>
             <li v-if="stockRatios.length > 0">PE ratio: {{ stockRatios[0]['priceEarningsRatio'].toFixed(2) }}</li>
@@ -123,7 +123,7 @@ export default defineComponent({
 	justify-content: center;
 	align-items: stretch;
 	align-content: stretch;
-    margin: 10px;
+    margin: auto;
     border-radius:20px;
     text-align: justify;
     margin-block-start: 20px;
@@ -132,6 +132,7 @@ export default defineComponent({
 h2 {
   color: #4b8f29;
   font-size: 2em;
+  text-align: center;
   /* text-decoration: underline solid; */
 }
 
@@ -139,5 +140,12 @@ li {
     list-style-type: none;
     font-family:Arial;
     font-size:1em;
+    margin: 20px auto;
+}
+
+li:hover {
+    background-color: #4b8f29;
+    color: white;
+    border-radius: 2px;
 }
 </style>
