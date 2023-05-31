@@ -2,7 +2,7 @@
   <h1>Stock Value Calculator</h1>
 
   <div class="stockInput">
-    <input class="input" type="text" v-model="ticker" placeholder="us stock ticker">
+    <input class="input" type="text" @change="start" v-model="ticker" placeholder="us stock ticker">
     <button class="myButton" @click="start" :disabled="isCalculating">Calculate</button>
   </div>
   <Results v-if="isCalculating" :ticker="ticker"/>
@@ -18,6 +18,7 @@ export default defineComponent({
   components: {
     Results,
   },
+  
   data() {
     return {
       isCalculating: false,
